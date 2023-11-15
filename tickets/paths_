@@ -1,0 +1,6 @@
+ path('customerview/', views.customer_view),
+    path('customerview/<int:pk>', views.customer_view_id),
+    path('customerviewclass/', views.CustomerView.as_view()),
+    path('customerviewclass/<int:pk>', views.CustomerView.as_view()),
+    path('customermixins/', views.MixinCustomer.as_view()),
+    path('customermixins/<int:pk>', views.MixinCustomer.as_view()),
