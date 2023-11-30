@@ -12,6 +12,8 @@ from rest_framework.decorators import permission_classes
 from django.contrib.auth.decorators import permission_required
 from django.shortcuts import get_object_or_404
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.authentication import SessionAuthentication
+
 
 
 
@@ -24,13 +26,13 @@ from rest_framework.pagination import PageNumberPagination
 class GenericsCustomerList(generics.ListCreateAPIView):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializers
-    authentication_classes = [TokenAuthentication]
+    authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
 
 class GenericsCustomer(generics.RetrieveUpdateDestroyAPIView):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializers
-    authentication_classes = [TokenAuthentication]
+    authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
 
 class ViewsetsCustomer(viewsets.ModelViewSet):
