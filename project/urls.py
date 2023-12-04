@@ -21,14 +21,14 @@ from rest_framework.routers import DefaultRouter
 from rest_framework.authtoken.views import obtain_auth_token
 
 router = DefaultRouter()
-router.register("customer", views.ViewsetsCustomer)
+# router.register("customer", views.ViewsetsCustomer)
 router.register("movie", views.ViewsetsMovie)
 router.register("reservation", views.ViewsetsReservation)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     # paths_
-    path('customergenerics/', views.GenericsCustomerList.as_view()),
+    path('customergenerics/', views.GenericsCustomerList.as_view(), name='customerlist'),
     path('customergenerics/<int:pk>', views.GenericsCustomer.as_view()),
     # path('customerviewsets/', include(router.urls)),
     # path('movieviewsets/', include(router.urls)),
@@ -41,9 +41,7 @@ urlpatterns = [
     path('movies/update/<int:movie_id>', views.update_movie),
     path('movies/delete/<int:movie_id>', views.delete_movie),
     path('reservations/view/<int:reservation_id>', views.view_reservation),
-
-
-
+    path('login', views.user_login, name='login'),
 
 ]
 

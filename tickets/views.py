@@ -7,7 +7,7 @@ from rest_framework import status, filters
 from rest_framework.views import APIView
 from rest_framework import generics, mixins, viewsets
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.decorators import permission_classes
 from django.contrib.auth.decorators import permission_required
 from django.shortcuts import get_object_or_404
@@ -15,19 +15,21 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.authentication import SessionAuthentication
 
 
-
-
-
-
 # Create your views here.
 
 # views_
     
+class CustomPagination(PageNumberPagination):
+    page_size = 2
+    page_size_query_param = 'page_size'
+    max_page_size = 100
+
 class GenericsCustomerList(generics.ListCreateAPIView):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializers
     authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminUser]
+    pagination_class = CustomPagination
 
 class GenericsCustomer(generics.RetrieveUpdateDestroyAPIView):
     queryset = Customer.objects.all()
@@ -35,25 +37,20 @@ class GenericsCustomer(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
 
-class ViewsetsCustomer(viewsets.ModelViewSet):
-    queryset = Customer.objects.all()
-    serializer_class = CustomerSerializers
-
 class ViewsetsMovie(viewsets.ModelViewSet):
     queryset = Movie.objects.all()
     serializer_class = MovieSerializers
     filter_backends = [filters.SearchFilter]
     search_fields = ['name']
-
-class CustomPagination(PageNumberPagination):
-    page_size = 2
-    page_size_query_param = 'page_size'
-    max_page_size = 100
+    pagination_class = CustomPagination
 
 class ViewsetsReservation(viewsets.ModelViewSet):
     queryset = Reservation.objects.all()
     serializer_class = ReservationSerializers
     pagination_class = CustomPagination
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
 
 @api_view(['GET'])
 def find_movie(request):
@@ -133,3 +130,23 @@ def view_reservation(request, reservation_id):
     reservation = get_object_or_404(Reservation, pk=reservation_id)
     serializer = ReservationSerializers(reservation)
     return Response(serializer.data)
+
+
+# -----------------------------------------------------------
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
+from django.shortcuts import redirect
+
+def user_login(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['pass1']
+        user = authenticate(username=username, password=password)
+        if user:
+            login(request, user)
+            return redirect('customerlist')
+
+        else:
+            return render(request, 'login.html', {'errors': True})
+    else:
+        return render(request, 'login.html')
