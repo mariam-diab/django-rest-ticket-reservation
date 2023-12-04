@@ -136,6 +136,8 @@ def view_reservation(request, reservation_id):
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.shortcuts import redirect
+from django.contrib import messages
+
 
 def user_login(request):
     if request.method == 'POST':
@@ -147,6 +149,7 @@ def user_login(request):
             return redirect('customerlist')
 
         else:
-            return render(request, 'login.html', {'errors': True})
+            messages.error(request, "Wrong username or password!")
+            return render(request, 'login.html')
     else:
         return render(request, 'login.html')
