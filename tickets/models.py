@@ -9,17 +9,24 @@ from django.conf import settings
 class Customer(models.Model):
     name = models.CharField(max_length=50)
     phone_number = models.CharField(max_length=11)
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
 
 
 class Movie(models.Model):
     name = models.CharField(max_length=50)
     hall = models.CharField(max_length=5)
     date = models.DateField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
 
 
 class Reservation(models.Model):
     customer_name = models.ForeignKey(Customer, related_name="reservations", on_delete=models.CASCADE)
     movie_name = models.ForeignKey(Movie, related_name="reservations", on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
+    
 
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
