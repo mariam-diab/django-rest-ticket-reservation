@@ -19,6 +19,7 @@ from django.urls import path, include
 from tickets import views
 from rest_framework.routers import DefaultRouter
 from rest_framework.authtoken.views import obtain_auth_token
+from django.views.generic.base import RedirectView
 
 router = DefaultRouter()
 # router.register("customer", views.ViewsetsCustomer)
@@ -27,6 +28,7 @@ router.register("reservation", views.ViewsetsReservation)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', RedirectView.as_view(url='/login', permanent=False)),
     # paths_
     path('customergenerics/', views.GenericsCustomerList.as_view(), name='customerlist'),
     path('customergenerics/<int:pk>', views.GenericsCustomer.as_view()),
