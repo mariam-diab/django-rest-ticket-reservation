@@ -18,7 +18,12 @@ class Movie(models.Model):
     hall = models.CharField(max_length=5)
     date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
-    modified_at = models.DateTimeField(auto_now=True)
+    modified_at = models.DateTimeField(null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if self.pk is not None:  
+            self.modified_at = timezone.now()
+        super().save(*args, **kwargs)
 
 
 class Reservation(models.Model):
