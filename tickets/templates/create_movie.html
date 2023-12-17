@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Movie</title>
+</head>
+<body>
+    <h1>Create Movie</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <label for="name">Name:</label><br>
+        <input type="text" id="name" name="name"><br>
+        <label for="hall">Hall:</label><br>
+        <input type="text" id="hall" name="hall"><br>
+        <label for="date">Date:</label><br>
+        <input type="date" id="date" name="date"><br>
+        <input type="submit" value="Create">
+    </form>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Update Movie</title>
+</head>
+<body>
+    <h1>Update Movie</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <label for="name">Name:</label><br>
+        <input type="text" id="name" name="name" value="{{ movie.name }}"><br>
+        <label for="hall">Hall:</label><br>
+        <input type="text" id="hall" name="hall" value="{{ movie.hall }}"><br>
+        <label for="date">Date:</label><br>
+        <input type="date" id="date" name="date" value="{{ date }}"><br>
+        <!-- <input type="date" id="date" name="date" value="{{ movie.date }}"><br> -->
+        <!-- <input type="date" id="date" name="date" value="{{ '2023-11-01' }}"><br> -->
+        <input type="submit" value="Update">
+    </form>
+</body>
+</html>

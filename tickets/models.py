@@ -1,3 +1,4 @@
+import datetime
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -22,7 +23,7 @@ class Movie(models.Model):
 
     def save(self, *args, **kwargs):
         if self.pk is not None:  
-            self.modified_at = timezone.now()
+            self.modified_at = datetime.datetime.now()
         super().save(*args, **kwargs)
 
 
@@ -32,7 +33,6 @@ class Reservation(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
     
-
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_token(sender, instance, created, **kwargs):

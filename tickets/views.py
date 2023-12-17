@@ -94,26 +94,26 @@ def new_reservation(request):
 
     return Response(status=status.HTTP_201_CREATED)
 
-@api_view(['POST']) #done
-@permission_required('tickets.add_movie')
-@permission_classes([IsAuthenticated])
-def create_movie(request):
-    serializer = MovieSerializers(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+# @api_view(['POST']) #done
+# @permission_required('tickets.add_movie')
+# @permission_classes([IsAuthenticated])
+# def create_movie(request):
+#     serializer = MovieSerializers(data=request.data)
+#     if serializer.is_valid():
+#         serializer.save()
+#         return Response(serializer.data, status=status.HTTP_201_CREATED)
+#     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['PUT'])
-@permission_required('tickets.change_movie')
-@permission_classes([IsAuthenticated])
-def update_movie(request, movie_id):
-    movie = get_object_or_404(Movie, pk=movie_id)
-    serializer = MovieSerializers(movie, data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+# @api_view(['PUT'])
+# @permission_required('tickets.change_movie')
+# @permission_classes([IsAuthenticated])
+# def update_movie(request, movie_id):
+#     movie = get_object_or_404(Movie, pk=movie_id)
+#     serializer = MovieSerializers(movie, data=request.data)
+#     if serializer.is_valid():
+#         serializer.save()
+#         return Response(serializer.data)
+#     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['DELETE'])
 @permission_required('tickets.delete_movie')
@@ -153,3 +153,37 @@ def user_login(request):
             return render(request, 'login.html')
     else:
         return render(request, 'login.html')
+
+@api_view(['GET', 'PUT', 'POST'])
+@permission_required('tickets.change_movie')
+@permission_classes([IsAuthenticated])
+def update_movie(request, movie_id):
+    movie = get_object_or_404(Movie, pk=movie_id)
+    if request.method == 'GET':
+        formatted_date = movie.date.strftime('%Y-%m-%d')
+        return render(request, 'update_movie.html', {'movie': movie, 'date': formatted_date})
+    elif request.method == 'POST':
+        data = request.data
+        serializer = MovieSerializers(movie, data)
+        fields_unchanged = movie.name == data['name']  and movie.hall == data['hall'] and str(movie.date) == data['date']
+        if fields_unchanged:
+            return Response({"error": ["The data was unchanged!"]}, status=status.HTTP_409_CONFLICT)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET', 'POST'])
+@permission_required('tickets.add_movie')
+@permission_classes([IsAuthenticated])
+def create_movie(request):
+    if request.method == 'GET':
+        return render(request, 'create_movie.html')
+    elif request.method == 'POST':
+        serializer = MovieSerializers(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+

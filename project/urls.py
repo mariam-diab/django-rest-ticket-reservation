@@ -27,8 +27,8 @@ router.register("movie", views.ViewsetsMovie)
 router.register("reservation", views.ViewsetsReservation)
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', RedirectView.as_view(url='/login', permanent=False)),
+    path('admin', admin.site.urls),
+    path('', views.user_login),
     # paths_
     path('customergenerics/', views.GenericsCustomerList.as_view(), name='customerlist'),
     path('customergenerics/<int:pk>', views.GenericsCustomer.as_view()),
@@ -43,7 +43,7 @@ urlpatterns = [
     path('movies/update/<int:movie_id>', views.update_movie),
     path('movies/delete/<int:movie_id>', views.delete_movie),
     path('reservations/view/<int:reservation_id>', views.view_reservation),
-    path('login', views.user_login, name='login'),
+    path('login', views.user_login),
 
 ]
 
